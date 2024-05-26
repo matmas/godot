@@ -431,6 +431,18 @@ void Node::_propagate_physics_interpolated(bool p_interpolated) {
 	data.blocked--;
 }
 
+void Node::_propagate_physics_interpolation_reset_requested() {
+	if (is_physics_interpolated()) {
+		data.physics_interpolation_reset_requested = true;
+	}
+
+	data.blocked++;
+	for (KeyValue<StringName, Node *> &K : data.children) {
+		K.value->_propagate_physics_interpolation_reset_requested();
+	}
+	data.blocked--;
+}
+
 void Node::move_child(Node *p_child, int p_index) {
 	ERR_FAIL_COND_MSG(data.inside_tree && !Thread::is_main_thread(), "Moving child node positions inside the SceneTree is only allowed from the main thread. Use call_deferred(\"move_child\",child,index).");
 	ERR_FAIL_NULL(p_child);
@@ -1551,6 +1563,12 @@ void Node::_add_child_nocheck(Node *p_child, const StringName &p_name, InternalM
 	add_child_notify(p_child);
 	notification(NOTIFICATION_CHILD_ORDER_CHANGED);
 	emit_signal(SNAME("child_order_changed"));
+
+	// Allow physics interpolated nodes to automatically reset when added to the tree
+	// (this is to save the user doing this manually each time).
+	if (is_inside_tree() && get_tree()->is_physics_interpolation_enabled()) {
+		p_child->_propagate_physics_interpolation_reset_requested();
+	}
 }
 
 void Node::add_child(Node *p_child, bool p_force_readable_name, InternalMode p_internal) {
@@ -3814,6 +3832,9 @@ Node::Node() {
 	data.unhandled_key_input = false;
 
 	data.physics_interpolated = true;
+	data.physics_interpolation_reset_requested = false;
+	data.physics_interpolated_client_side = false;
+	data.use_identity_transform = false;
 
 	data.parent_owned = false;
 	data.in_constructor = true;

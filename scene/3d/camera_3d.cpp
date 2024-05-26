@@ -97,6 +97,10 @@ void Camera3D::_update_camera() {
 	get_viewport()->_camera_3d_transform_changed_notify();
 }
 
+void Camera3D::_physics_interpolated_changed() {
+	RenderingServer::get_singleton()->camera_set_interpolated(camera, is_physics_interpolated());
+}
+
 void Camera3D::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_ENTER_WORLD: {
@@ -122,6 +126,12 @@ void Camera3D::_notification(int p_what) {
 			_request_camera_update();
 			if (doppler_tracking != DOPPLER_TRACKING_DISABLED) {
 				velocity_tracker->update_position(get_global_transform().origin);
+			}
+		} break;
+
+		case NOTIFICATION_RESET_PHYSICS_INTERPOLATION: {
+			if (is_physics_interpolated()) {
+				RenderingServer::get_singleton()->camera_reset_physics_interpolation(camera);
 			}
 		} break;
 

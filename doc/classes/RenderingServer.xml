@@ -110,6 +110,14 @@
 				[b]Note:[/b] The equivalent node is [Camera3D].
 			</description>
 		</method>
+		<method name="camera_reset_physics_interpolation">
+			<return type="void" />
+			<param index="0" name="camera" type="RID" />
+			<description>
+				Prevents physics interpolation for the current physics tick.
+				This is useful when moving a camera to a new location, to give an instantaneous change rather than interpolation from the previous location.
+			</description>
+		</method>
 		<method name="camera_set_camera_attributes">
 			<return type="void" />
 			<param index="0" name="camera" type="RID" />
@@ -151,6 +159,14 @@
 			<param index="4" name="z_far" type="float" />
 			<description>
 				Sets camera to use frustum projection. This mode allows adjusting the [param offset] argument to create "tilted frustum" effects.
+			</description>
+		</method>
+		<method name="camera_set_interpolated">
+			<return type="void" />
+			<param index="0" name="camera" type="RID" />
+			<param index="1" name="interpolated" type="bool" />
+			<description>
+				Turns on and off physics interpolation for the camera.
 			</description>
 		</method>
 		<method name="camera_set_orthogonal">
@@ -1855,6 +1871,14 @@
 				Sets the visibility range values for the given geometry instance. Equivalent to [member GeometryInstance3D.visibility_range_begin] and related properties.
 			</description>
 		</method>
+		<method name="instance_reset_physics_interpolation">
+			<return type="void" />
+			<param index="0" name="instance" type="RID" />
+			<description>
+				Prevents physics interpolation for the current physics tick.
+				This is useful when moving an instance to a new location, to give an instantaneous change rather than interpolation from the previous location.
+			</description>
+		</method>
 		<method name="instance_set_base">
 			<return type="void" />
 			<param index="0" name="instance" type="RID" />
@@ -1894,6 +1918,14 @@
 			<param index="1" name="enabled" type="bool" />
 			<description>
 				If [code]true[/code], ignores both frustum and occlusion culling on the specified 3D geometry instance. This is not the same as [member GeometryInstance3D.ignore_occlusion_culling], which only ignores occlusion culling and leaves frustum culling intact.
+			</description>
+		</method>
+		<method name="instance_set_interpolated">
+			<return type="void" />
+			<param index="0" name="instance" type="RID" />
+			<param index="1" name="interpolated" type="bool" />
+			<description>
+				Turns on and off physics interpolation for the instance.
 			</description>
 		</method>
 		<method name="instance_set_layer_mask">
